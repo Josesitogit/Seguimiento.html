@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Paquete - CK One</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2; /* Color de fondo suave */
+        }
+        .logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .input-container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff; /* Fondo blanco para el contenedor */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #3b5998; /* Color azul relacionado con la página */
+        }
+        h2 {
+            color: #333; /* Color negro para los subtítulos */
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            background-color: #3b5998; /* Botón azul */
+            color: white; /* Texto blanco en el botón */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2d4373; /* Color más oscuro al pasar el mouse */
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .order-details {
+            display: flex;
+            align-items: center; /* Alinear verticalmente */
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #ffffff; /* Fondo blanco para los detalles del pedido */
+            border-radius: 8px;
+            border-left: 5px solid #3b5998; /* Borde azul para un toque adicional */
+        }
+        .order-details img {
+            width: 100px; /* Tamaño de la imagen */
+            margin-right: 20px; /* Espacio a la derecha de la imagen */
+            border-radius: 5px; /* Bordes redondeados para la imagen */
+        }
+        .piece-indicator {
+            width: 25px;
+            height: 25px;
+            background-color: #e67e22; /* Color naranja */
+            color: white;
+            border-radius: 50%; /* Círculo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px; /* Tamaño de fuente más pequeño */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: 2px solid white; /* Borde blanco para destacar */
+        }
+        .estimated-delivery {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px; /* Ajustar el margen superior */
+            font-size: 12px; /* Tamaño de fuente más pequeño */
+            color: #e67e22; /* Color naranja para la fecha de entrega */
+        }
+        .static-link {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+            color: #3b5998; /* Color azul para el enlace */
+        }
+        .static-link a {
+            color: #3b5998; /* Color azul del enlace */
+            text-decoration: none; /* Sin subrayado */
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f7f7f7; /* Fondo gris claro */
+            position: relative;
+            height: 60px; /* Altura de la barra de estado */
+        }
+        .status {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 10px;
+            color: #999; /* Color gris para estado no activo */
+        }
+        .status.active {
+            color: #3b5998; /* Azul para estado activo */
+            font-weight: bold;
+        }
+        .status:after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #3b5998; /* Barra activa */
+            transform: translateX(-50%);
+            z-index: -1;
+            display: none;
+        }
+        .status.active:after {
+            display: block;
+        }
+        .airplane-icon {
+            width: 30px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+        }
+        .status.active .airplane-icon {
+            display: block; /* Mostrar ícono de avión en el estado activo */
+        }
+        .order-summary {
+            display: flex;
+            justify-content: space-between; /* Distribuir espacio entre imagen y texto */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logo de DCompras -->
+<div class="logo">
+    <img src="https://dcompras.mx/media/logo/websites/1/logo_dcompras_final-ai.svg" alt="Logo DCompras" width="200">
+</div>
+
+<!-- Sección para ingresar el número de guía -->
+<div class="input-container">
+    <h1>Seguimiento de Paquete</h1>
+    <input type="text" id="trackingNumber" placeholder="Ingresa el número de guía" />
+    <button onclick="checkTrackingNumber()">Continuar</button>
+</div>
+
+<!-- Sección para mostrar el seguimiento -->
+<div class="container" id="trackingContainer" style="display: none;">
+    <div class="order-details">
+        <img src="https://cdn.fragrancenet.com/images/photos/600x600/115760.jpg" alt="CK One" />
+        <div style="position: relative;">
+            <h2>CK One 200ml Eau de Toilet</h2>
+            <span class="piece-indicator">2</span> <!-- Indicador de piezas -->
+            <p class="order-info">Costo total: $3,265 MXN</p>
+            <p class="order-info">Procedencia: Av. de los Insurgentes 123, Ciudad de México, México</p>
+            <span class="estimated-delivery">Fecha estimada: Miércoles 6 de noviembre / Jueves 7 de noviembre</span>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status" id="warehouse">En almacén</div>
+        <div class="status active" id="transit">En tránsito
+            <img src="https://img.icons8.com/ios-filled/50/000000/airplane-take-off.png" alt="Avión" class="airplane-icon"/>
+        </div>
+        <div class="status" id="delivered">Entregado</div>
+    </div>
+    
+    <button onclick="updateStatus()">Actualizar Estado</button>
+
+    <div class="static-link">
+        <h2>Visita la página del producto:</h2>
+        <a href="https://dcompras.mx/perfume-de-caballero-ck-all-calvin-klein-200-ml#" target="_blank">CK One 200ml</a>
+    </div>
+</div>
+
+<script>
+    function checkTrackingNumber() {
+        // Obtener el número de guía ingresado
+        const trackingNumber = document.getElementById('trackingNumber').value;
+
+        // Comprobar si el número de guía es correcto
+        if (trackingNumber === "702-0577062-8994646") {
+            // Mostrar la sección de seguimiento
+            document.getElementById('trackingContainer').style.display = 'block';
+            // Ocultar la sección de entrada
+            document.querySelector('.input-container').style.display = 'none';
+        } else {
+            alert("Número de guía inválido. Por favor, verifica el número.");
+        }
+    }
+
+    function updateStatus() {
+        alert("El paquete se encuentra en tránsito.");
+    }
+</script>
+
+</body>
+</html>
